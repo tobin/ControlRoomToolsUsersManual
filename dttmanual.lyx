@@ -1,0 +1,926 @@
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\usepackage{fullpage}
+\end_preamble
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Diagnostic Test Tools: Users Manual
+\end_layout
+
+\begin_layout Author
+Tobin Fricke, ed.
+\end_layout
+
+\begin_layout Section
+DTT modes
+\end_layout
+
+\begin_layout Standard
+DTT has four main modes:
+\end_layout
+
+\begin_layout Description
+Fourier
+\begin_inset space ~
+\end_inset
+
+Tools Compute spectra, coherence, and transfer functions using Welch's method
+ (based on the FFT) using either data from the past or realtime data.
+ Simultaneously, injections of nearly any waveform can be made into a collection
+ of excitation points.
+\end_layout
+
+\begin_layout Description
+Swept
+\begin_inset space ~
+\end_inset
+
+Sine
+\begin_inset space ~
+\end_inset
+
+Response Used to measure transfer functions in real-time, by injecting a
+ sinusoidal excitation over a collection of frequencies (one at a time)
+ and demodulating readout channels at the same frequency.
+\end_layout
+
+\begin_layout Description
+Sine
+\begin_inset space ~
+\end_inset
+
+Response Performs a sinusoidal stimulus-response measurement at a single
+ frequency.
+\end_layout
+
+\begin_layout Description
+Triggered
+\begin_inset space ~
+\end_inset
+
+Time
+\begin_inset space ~
+\end_inset
+
+Response Capture timeseries, possibly in conjunction with a time-series
+ excitation.
+\end_layout
+
+\begin_layout Subsection
+Fourier Tools
+\end_layout
+
+\begin_layout Description
+Start The lowest frequency to include in the computed spectra.
+ In most cases, zero (0) is an appropriate choice.
+ If you want to compute a high-resolution (small-binwidth) spectrum of only
+ a small portion of the available bandwidth, then choosing a nonzero value
+ would be appropriate.
+\end_layout
+
+\begin_layout Description
+Stop The uppermost frequency to include in the computed spectra.
+ The theoretical upper limit is given by the Nyquist frequency, which is
+ half the sample rate of the measurement channel.
+ DTT enforces a slightly lower maximum frequency.
+ If you are measuring multiple channels simultaneously, the maximum upper
+ frequency will be limited by the channel with the slowest sample rate.
+\end_layout
+
+\begin_layout Description
+BW The `binwidth' (frequency resolution) of the computed spectra.
+ This is the difference, in Hz, between adjacent frequency bins.
+ The time required to compute one spectral average is inversely proportional
+ to the binwidth.
+ For example, if you'd like a spectrum with 0.1 Hz resolution, it will take
+ 10 seconds to produce the first average.
+ (With 50% overlap, only 5 seconds of additional data are subsequently required
+ for each additional average.)
+\end_layout
+
+\begin_layout Description
+Settling
+\begin_inset space ~
+\end_inset
+
+Time
+\end_layout
+
+\begin_layout Description
+Window Windowing is a technique to reduce `spectral leakage.' Unless you
+ are aware of reasons to choose otherwise, the Hanning window is a safe,
+ general default.
+ If you are interested in the height of spectral peaks but not their width,
+ the Flat-top window can be a better choice.
+\end_layout
+
+\begin_layout Description
+Overlap Percentage of the time series for each spectral average that overlaps
+ with the time series used for the prior measurement.
+ With the Hanning window, 50% is an appropriate choice.
+\end_layout
+
+\begin_layout Description
+Remove
+\begin_inset space ~
+\end_inset
+
+mean When this option is selected, the mean value of each chunk of time
+ series is removed before computing spectra.
+ Unless you are interested in values at DC, this is usually a good choice,
+ since it can improve numerical accuracy.
+\end_layout
+
+\begin_layout Description
+Number
+\begin_inset space ~
+\end_inset
+
+of
+\begin_inset space ~
+\end_inset
+
+A
+\begin_inset space ~
+\end_inset
+
+channels An 
+\begin_inset Quotes eld
+\end_inset
+
+A channel
+\begin_inset Quotes erd
+\end_inset
+
+ is any channel that can appear in the denominator of a transfer function.
+\end_layout
+
+\begin_layout Description
+Averages
+\end_layout
+
+\begin_layout Description
+Average
+\begin_inset space ~
+\end_inset
+
+type
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/dtt-spectra-measurement.png
+	width 48col%
+
+\end_inset
+
+ 
+\begin_inset Graphics
+	filename figures/dtt-spectra-result.png
+	width 48col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Screenshot of the measurement and result tabs in Fourier Tools mode
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/dtt-sweptsine-measurement.png
+	width 48col%
+
+\end_inset
+
+ 
+\begin_inset Graphics
+	filename figures/dtt-sweptsine-result.png
+	width 48col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Screenshot of the measurement and result tabs in swept-sine mode
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/dtt-timeresp-measurement.png
+	width 48col%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/dtt-timeresp-result.png
+	width 48col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Screenshot of the measurement and result tabs in time response mode
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+fsdfsadf
+\end_layout
+
+\begin_layout Subsection
+Swept Sine Response
+\end_layout
+
+\begin_layout Description
+Start The lowest frequency to measure.
+ Note: for a logarithmic sweep, this 
+\emph on
+must be nonzero
+\emph default
+.
+\end_layout
+
+\begin_layout Description
+Stop The highest frequency to measure.
+ This must be above the start frequency, but the direction of the sweep
+ can be changed via the 
+\begin_inset Quotes eld
+\end_inset
+
+Sweep direction
+\begin_inset Quotes erd
+\end_inset
+
+ option (below).
+\end_layout
+
+\begin_layout Description
+Points Number of distinct frequencies to measure.
+\end_layout
+
+\begin_layout Description
+Settling
+\begin_inset space ~
+\end_inset
+
+Time
+\end_layout
+
+\begin_layout Description
+Measurement
+\begin_inset space ~
+\end_inset
+
+time: cycles/sec
+\end_layout
+
+\begin_layout Description
+Averages Number of measurements made at each frequency.
+\end_layout
+
+\begin_layout Description
+Harmonic
+\begin_inset space ~
+\end_inset
+
+Order This option is a great mystery.
+\end_layout
+
+\begin_layout Description
+Window 
+\emph on
+same as in fourier-tools mode
+\end_layout
+
+\begin_layout Description
+Power
+\begin_inset space ~
+\end_inset
+
+Spectrum: I've never used this option either.
+\end_layout
+
+\begin_layout Description
+Number
+\begin_inset space ~
+\end_inset
+
+of
+\begin_inset space ~
+\end_inset
+
+A
+\begin_inset space ~
+\end_inset
+
+channels 
+\emph on
+same as in fourier-tools mode
+\end_layout
+
+\begin_layout Description
+Sweep
+\begin_inset space ~
+\end_inset
+
+direction 
+\begin_inset Quotes eld
+\end_inset
+
+up
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+down
+\begin_inset Quotes erd
+\end_inset
+
+.
+ If 
+\begin_inset Quotes eld
+\end_inset
+
+up
+\begin_inset Quotes erd
+\end_inset
+
+ is selected, then the sweep begins at the 
+\begin_inset Quotes eld
+\end_inset
+
+start
+\begin_inset Quotes erd
+\end_inset
+
+ (lowest) frequency and goes towards higher frequencies.
+ Typically one chooses a downward sweep, since higher frequencies are quicker
+ to measure.
+\end_layout
+
+\begin_layout Description
+Sweep
+\begin_inset space ~
+\end_inset
+
+type linear or logarithmic.
+ Typically a logarithmic sweep is used to make a Bode plot, while a linear
+ sweep may be more appropriate for examining a small bandwidth around some
+ feature.
+ The sweep type is also affected by the 
+\begin_inset Quotes eld
+\end_inset
+
+User
+\begin_inset Quotes erd
+\end_inset
+
+ option
+\end_layout
+
+\begin_layout Description
+User
+\begin_inset space ~
+\end_inset
+
+(checkbox)
+\end_layout
+
+\begin_layout Subsection
+Sine Response
+\end_layout
+
+\begin_layout Standard
+Sine response is similar to swept-sine response, but the measurement is
+ made only at a single frequency rather than sweeping over a collection
+ of measurement frequencies.
+\end_layout
+
+\begin_layout Standard
+This is particularly useful when tuning some parameter in real-time, where
+ you would like to maximize or minimize the response to some excitation.
+\end_layout
+
+\begin_layout Standard
+The parameters are a subset of the swept-sine parameters.
+\end_layout
+
+\begin_layout Description
+Measurement
+\begin_inset space ~
+\end_inset
+
+time 
+\emph on
+same as in swept-sine mode
+\end_layout
+
+\begin_layout Description
+Settling
+\begin_inset space ~
+\end_inset
+
+time 
+\emph on
+same as in swept-sine mode
+\end_layout
+
+\begin_layout Description
+Window s
+\emph on
+ame as in swept-sine mode
+\end_layout
+
+\begin_layout Description
+Power
+\begin_inset space ~
+\end_inset
+
+spectrum 
+\emph on
+same as in swept-sine mode
+\end_layout
+
+\begin_layout Description
+Harmonic
+\begin_inset space ~
+\end_inset
+
+order 
+\emph on
+same as in swept-sine mode
+\end_layout
+
+\begin_layout Description
+Averages 
+\emph on
+same as in swept-sine mode
+\end_layout
+
+\begin_layout Description
+Average
+\begin_inset space ~
+\end_inset
+
+type 
+\emph on
+same as in swept-sine mode
+\end_layout
+
+\begin_layout Subsection
+Triggered Time Response
+\end_layout
+
+\begin_layout Standard
+This is DTT's one time-domain mode.
+ It is most useful for capturing short segments of time series and making
+ time-domain measurements such as step response.
+ It does not provide a real-time scope-like display, nor is it really 
+\begin_inset Quotes eld
+\end_inset
+
+triggered
+\begin_inset Quotes erd
+\end_inset
+
+ in the sense that a scope can be triggered by an external input.
+\end_layout
+
+\begin_layout Description
+Measurement
+\begin_inset space ~
+\end_inset
+
+Time
+\end_layout
+
+\begin_layout Description
+BW
+\end_layout
+
+\begin_layout Description
+Settling
+\begin_inset space ~
+\end_inset
+
+Time
+\end_layout
+
+\begin_layout Description
+Pre-trigger
+\begin_inset space ~
+\end_inset
+
+time
+\end_layout
+
+\begin_layout Description
+Dead
+\begin_inset space ~
+\end_inset
+
+time
+\end_layout
+
+\begin_layout Description
+Include
+\begin_inset space ~
+\end_inset
+
+statistics
+\end_layout
+
+\begin_layout Description
+Averages
+\end_layout
+
+\begin_layout Description
+Average
+\begin_inset space ~
+\end_inset
+
+type
+\end_layout
+
+\begin_layout Description
+Filter
+\end_layout
+
+\begin_layout Section
+Excitation tab
+\end_layout
+
+\begin_layout Description
+Excitation
+\begin_inset space ~
+\end_inset
+
+channel
+\end_layout
+
+\begin_layout Description
+Readback
+\begin_inset space ~
+\end_inset
+
+channel
+\end_layout
+
+\begin_layout Description
+Waveform
+\end_layout
+
+\begin_layout Description
+Waveform
+\begin_inset space ~
+\end_inset
+
+file
+\end_layout
+
+\begin_layout Description
+Frequency,
+\begin_inset space ~
+\end_inset
+
+Amplitude,
+\begin_inset space ~
+\end_inset
+
+Offset,
+\begin_inset space ~
+\end_inset
+
+Phase,
+\begin_inset space ~
+\end_inset
+
+Ratio
+\end_layout
+
+\begin_layout Description
+Freq.
+\begin_inset space ~
+\end_inset
+
+Range
+\end_layout
+
+\begin_layout Description
+Ampl.
+\begin_inset space ~
+\end_inset
+
+Range
+\end_layout
+
+\begin_layout Description
+Filter
+\end_layout
+
+\begin_layout Section
+Result tab
+\end_layout
+
+\begin_layout Section
+Error messages
+\end_layout
+
+\begin_layout Standard
+Looking at the source code to diag.cc shows (at least) 193 points at which
+ an error message is generated.
+ Most are self-explanatory, but the common ones can be quite cryptic.
+ Here are some of the more ambiguous messages.
+\end_layout
+
+\begin_layout Description
+Synchronization
+\begin_inset space ~
+\end_inset
+
+error Some things to try: Make sure that the local workstation's clock and
+ the clocks of the various CDS machines are correctly synchronized.
+ Make sure all software agrees on the list of leap seconds.
+\end_layout
+
+\begin_layout Section
+Foton
+\end_layout
+
+\begin_layout Standard
+foton is our tool for designing digital filters.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/foton-design.png
+	width 48col%
+
+\end_inset
+
+ 
+\begin_inset Graphics
+	filename figures/foton-bode.png
+	width 48col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Foton screen shots
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/medm-filtermodule.png
+	width 100col%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+medm filter module screen
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Arbitrary waveform generator, graphical interface (awggui)
+\end_layout
+
+\begin_layout Standard
+awggui is a graphical interface to the arbitrary waveform generator.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/awg.png
+	width 48text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+awggui
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Command-line interface
+\end_layout
+
+\begin_layout Standard
+diag is the command-line interface to the global diagnostics system.
+ It's specifically useful for clearing testpoints and excitations after
+ something has crashed.
+\end_layout
+
+\begin_layout Section
+Dataviewer
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
